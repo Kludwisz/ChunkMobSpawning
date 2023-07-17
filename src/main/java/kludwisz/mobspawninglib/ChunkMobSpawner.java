@@ -77,7 +77,7 @@ public class ChunkMobSpawner {
 	    return List.of();
 	}
 	
-	private CreatureData getRandomCreature(ChunkRand rand, List<CreatureData> list) {
+	public CreatureData getRandomCreature(ChunkRand rand, List<CreatureData> list) {
 		int totalWeight = 0;
 		for (CreatureData creature : list) {
 			totalWeight += creature.weight;
@@ -94,7 +94,7 @@ public class ChunkMobSpawner {
 		return null;
 	}
 	
-	private boolean checkEntityCollision(Creature target, List<Creature> entities) {
+	public boolean checkEntityCollision(Creature target, List<Creature> entities) {
 		for (Creature other : entities) {
 			if (target.hitbox.collidesWithXZ(other.hitbox)) // using the shortcut without y axis for now
 				return true;

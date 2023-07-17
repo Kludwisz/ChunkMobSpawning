@@ -11,8 +11,8 @@ public class Hitbox {
 	
 	public static Hitbox of(CreatureType type, Position pos) {
 		return new Hitbox(
-			new Position(pos.x - type.width/2, pos.y, pos.z - type.width/2),
-			new Position(pos.x + type.width/2, pos.y + type.height, pos.z + type.width/2)
+			new Position(pos.x - type.width/2.0D, pos.y, pos.z - type.width/2.0D),
+			new Position(pos.x + type.width/2.0D, pos.y + type.height, pos.z + type.width/2.0D)
 			);
 	}
 	

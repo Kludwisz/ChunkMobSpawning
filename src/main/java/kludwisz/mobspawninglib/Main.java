@@ -24,8 +24,8 @@ import com.seedfinding.mcterrain.TerrainGenerator;
 /* EXAMPLE OF USE:
  * Finding a seed with 20 naturally-spawning striders in 1 chunk
  *
- * EXAMPLE RESULT:
- * 80261316340888 -> 20 striders near 0,0 in the nether
+ * RESULT:
+ * 80261316340888 -> 20 striders
 */
 
 public class Main {
@@ -38,10 +38,8 @@ public class Main {
 		//findWorldSeeds();
 		test(12345L);
 	}
-
-	// solutions: 
-	// 177057131736104
-	// 220297901824372
+	
+	// one solution: 177057131736104
 	public static void runLattiCG() {
 		DynamicProgram device = DynamicProgram.create(LCG.JAVA);
 		
@@ -112,22 +110,25 @@ public class Main {
 	public static void test(long worldseed) {
 		ChunkMobSpawner spawner = new ChunkMobSpawner();
 		ChunkRand rand = new ChunkRand();
-		
-		for (int chunkX = -10; chunkX <= 10; chunkX++) for (int chunkZ = -10; chunkZ <= 10; chunkZ++) {
-			rand.setPopulationSeed(worldseed, chunkX<<4, chunkZ<<4, MCVersion.v1_16_1);
+		int chunkX = 134;
+		int chunkZ = -11;
+		//for (int chunkX = -16; chunkX <= 18; chunkX++) for (int chunkZ = -16; chunkZ <= 16; chunkZ++) {
+			rand.setPopulationSeed(worldseed & Mth.MASK_48, chunkX<<4, chunkZ<<4, MCVersion.v1_16_1);
 			
 			BiomeSource obs = BiomeSource.of(Dimension.OVERWORLD, VERSION, worldseed);
-			Biome b = obs.getBiomeForNoiseGen((chunkX << 2) + 2, 0, (chunkZ << 2) + 2);
+			Biome b = obs.getBiome((chunkX<<4)+8, 0, (chunkZ<<4)+8);
 			//System.out.println(b.getName());
 			
-			List<Creature> creatureList = spawner.getMobsInChunk(b, chunkX, chunkZ, rand, null);
-			if (creatureList.isEmpty())
-				continue;
+			List<Creature> creatureList = spawner.getMobsInChunk(b, chunkX, chunkZ, rand, TerrainGenerator.of(obs));
 			
-			System.out.println(worldseed + ": Likely creatures for chunk " + chunkX + "," + chunkZ + ": ");
+			//if (creatureList.isEmpty())
+			//	continue;
+			
+			System.out.println(worldseed + ": Likely creatures at");
+			System.out.println(chunkX + "," + chunkZ + ", " + b.getName() + ":");
 			for (Creature c : creatureList) {
 				System.out.println(c.toString());
 			}
-		}
+		//}
 	}
 }

@@ -16,9 +16,12 @@ public class ChunkMobSpawner {
 		return getMobsInChunk(biome, chunkPos.getX(), chunkPos.getZ(), rand, null);
 	}
 	
-	// note: the algorithm requires the rand object to be seeded with the population seed, it doesn't simulate terrain
+	// note: the algorithm requires the rand object to be seeded with the population seed
 	public List<Creature> getMobsInChunk(Biome biome, int chunkX, int chunkZ, ChunkRand rand, TerrainGenerator tgen) {
 		boolean checkTerrain = tgen != null;
+		TerrainChunk tchunk = null;
+		if (checkTerrain)
+			tchunk = new TerrainChunk(new CPos(chunkX, chunkZ), tgen);
 		
 		ArrayList<Creature> spawnedCreatures = new ArrayList<>();
 		ArrayList<Creature> currentPack = new ArrayList<>();
@@ -31,6 +34,7 @@ public class ChunkMobSpawner {
 	    	while(rand.nextFloat() < 0.1F) {
 	    		CreatureData selectedCreature = getRandomCreature(rand, creatureDataList);
 	    		int creatureCount = selectedCreature.minCount + rand.nextInt(1 + selectedCreature.maxCount - selectedCreature.minCount); 
+	    		System.out.println(creatureCount);
 	            
 	    		int x = chunkCornerX + rand.nextInt(16);
 	    		int z = chunkCornerZ + rand.nextInt(16);
@@ -45,15 +49,11 @@ public class ChunkMobSpawner {
 	    				float width = selectedCreature.type.width;
 	    				double realX = Mth.clamp((double)x, (double)chunkCornerX + (double)width, (double)chunkCornerX + 16.0D - (double)width);
 	    				double realZ = Mth.clamp((double)z, (double)chunkCornerZ + (double)width, (double)chunkCornerZ + 16.0D - (double)width);
-	                  
-	    				int y = 64;
-	    				if (checkTerrain) {
-	    					// TODO
-	    					/*y = some value*/
-	    				}
+	    				int y = checkTerrain ? tchunk.getHeightAt((int)realX, (int)realZ) : 64;
+
 	    				Creature entity = new Creature(selectedCreature.type, realX, y, realZ);
-	    				if (checkEntityCollision(entity, currentPack) || (checkTerrain && checkBlockCollision(entity))) {	// entity collisions are considered by default
-	    					//System.out.println("Collision occurred.");
+	    				if (checkEntityCollision(entity, currentPack) || (checkTerrain && tchunk.checkBlockCollision(entity))) {
+	    					System.out.println("Collision occurred.");
 	    					continue;
 	    				}
 	    				
@@ -61,6 +61,7 @@ public class ChunkMobSpawner {
 	    				entity.pitch = 0.0F;
 	    				
 	    				// assuming there is no spawn obstruction and no additional spawn rules
+	    				System.out.println("placed");
 	    				currentPack.add(entity);
 	    				spawnSuccessful = true;
 	            
@@ -109,12 +110,6 @@ public class ChunkMobSpawner {
 			if (target.hitbox.collidesWithXZ(other.hitbox)) // using the shortcut without y axis for now
 				return true;
 		}
-		return false;
-	}
-	
-	private boolean checkBlockCollision(Creature target) {
-		// TODO use TerrainGenerator to detect some of the entity-block collisions
-		
 		return false;
 	}
 }

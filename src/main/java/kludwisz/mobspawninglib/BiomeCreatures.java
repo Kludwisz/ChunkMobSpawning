@@ -42,7 +42,7 @@ public class BiomeCreatures {
 		BIOME_CREATURES.put("snowy_taiga_hills", Preset.TAIGA);
 		BIOME_CREATURES.put("giant_tree_taiga", Preset.TAIGA);
 		BIOME_CREATURES.put("giant_tree_taiga_hills", Preset.TAIGA);
-		BIOME_CREATURES.put("wooded_mountains", Preset.TAIGA);
+		BIOME_CREATURES.put("wooded_mountains", Preset.MOUNTAINS);
 		BIOME_CREATURES.put("savanna", Preset.SAVANNA);
 		BIOME_CREATURES.put("savanna_plateau", Preset.SAVANNAPLATEAU);
 		BIOME_CREATURES.put("sunflower_plains", Preset.PLAINS);

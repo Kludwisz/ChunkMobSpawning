@@ -6,7 +6,7 @@ public enum CreatureType {
 	CHICKEN(0.4F, 0.7F),
 	COW(0.9F, 1.4F),
 	WOLF(0.6F, 0.85F),
-	HORSE(1.3964F, 1.6F),
+	HORSE(0.9F, 1.6F),
 	DONKEY(1.3964F, 1.5F),
 	MOOSHROOM(0.9F, 1.4F),
 	LLAMA(0.9F, 1.875F),

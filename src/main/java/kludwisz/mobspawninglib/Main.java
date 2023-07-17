@@ -24,8 +24,8 @@ import com.seedfinding.mcterrain.TerrainGenerator;
 /* EXAMPLE OF USE:
  * Finding a seed with 20 naturally-spawning striders in 1 chunk
  *
- * RESULT:
- * 80261316340888 -> 20 striders
+ * EXAMPLE RESULT:
+ * 80261316340888 -> 20 striders near 0,0 in the nether
 */
 
 public class Main {
@@ -39,12 +39,14 @@ public class Main {
 		test(12345L);
 	}
 
-	// one solution: 177057131736104
+	// solutions: 
+	// 177057131736104
+	// 220297901824372
 	public static void runLattiCG() {
 		DynamicProgram device = DynamicProgram.create(LCG.JAVA);
 		
-		// going for a pack of (potentially) 22 striders in 1 chunk
-		for (int i=0; i<11; i++) {
+		// going for a pack of (potentially) 20 striders in 1 chunk
+		for (int i=0; i<10; i++) {
 			device.add(JavaCalls.nextFloat().lessThan(0.1F)); 	// does spawn
 			device.skip(1);										// useless nextInt(60)
 			device.skip(1);

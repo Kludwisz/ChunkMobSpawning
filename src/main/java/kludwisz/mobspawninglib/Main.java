@@ -38,7 +38,8 @@ public class Main {
 		//findWorldSeeds();
 		test(12345L);
 	}
-	
+
+	// one solution: 177057131736104
 	public static void runLattiCG() {
 		DynamicProgram device = DynamicProgram.create(LCG.JAVA);
 		

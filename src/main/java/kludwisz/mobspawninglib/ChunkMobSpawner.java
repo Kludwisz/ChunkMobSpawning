@@ -103,12 +103,7 @@ public class ChunkMobSpawner {
 	}
 	
 	private boolean checkBlockCollision(Creature target) {
-		if (target.type.width < 1.0F)	// if the creature fits within a block, it won't collide with other blocks on the x,z axes
-			return false;				// ignoring y-axis collisions since they usually involve decorators such as trees
-		else {
-			// TODO (maybe??) use TerrainGenerator to detect some of the entity-block collisions
-		}
-		
+		// TODO (maybe??) use TerrainGenerator to detect some of the entity-block collisions
 		return false;
 	}
 }

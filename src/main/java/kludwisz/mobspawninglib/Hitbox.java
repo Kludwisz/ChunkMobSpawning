@@ -9,6 +9,13 @@ public class Hitbox {
 		this.posMax = posMax;
 	}
 	
+	public static Hitbox of(CreatureType type, Position pos) {
+		return new Hitbox(
+			new Position(pos.x - type.width/2, pos.y, pos.z - type.width/2),
+			new Position(pos.x + type.width/2, pos.y + type.height, pos.z + type.width/2)
+			);
+	}
+	
 	public boolean collidesWithXZ(Hitbox other) {
 		if (   this.posMax.x >= other.posMin.x && this.posMin.x <= other.posMax.x 
 			&& this.posMax.z >= other.posMin.z && this.posMin.z <= other.posMax.z) {

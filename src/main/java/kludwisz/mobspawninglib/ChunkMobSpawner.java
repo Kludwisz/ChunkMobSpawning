@@ -8,17 +8,20 @@ import com.seedfinding.mccore.rand.ChunkRand;
 import com.seedfinding.mccore.util.pos.CPos;
 import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcmath.util.Mth;
+import com.seedfinding.mcterrain.TerrainGenerator;
 
 public class ChunkMobSpawner {
 	
 	public List<Creature> getMobsInChunk(Biome biome, CPos chunkPos, ChunkRand rand) {
-		return getMobsInChunk(biome, chunkPos.getX(), chunkPos.getZ(), rand);
+		return getMobsInChunk(biome, chunkPos.getX(), chunkPos.getZ(), rand, null);
 	}
 	
-	// note: the algorithm requires the rand object to be seeded with the population seed
-	public List<Creature> getMobsInChunk(Biome biome, int chunkX, int chunkZ, ChunkRand rand) {
+	// note: the algorithm requires the rand object to be seeded with the population seed, it doesn't simulate terrain
+	public List<Creature> getMobsInChunk(Biome biome, int chunkX, int chunkZ, ChunkRand rand, TerrainGenerator tgen) {
+		boolean checkTerrain = tgen != null;
 		
 		ArrayList<Creature> spawnedCreatures = new ArrayList<>();
+		ArrayList<Creature> currentPack = new ArrayList<>();
 	    List<CreatureData> creatureDataList = BiomeCreatures.getCreaturesForBiome(biome);
 	    
 	    if (!creatureDataList.isEmpty()) {
@@ -33,17 +36,23 @@ public class ChunkMobSpawner {
 	    		int z = chunkCornerZ + rand.nextInt(16);
 	    		final int originalBlockX = x;
 	    		final int originalBlockZ = z;
-
+	    		currentPack.clear();
+	    		
 	    		for(int i = 0; i < creatureCount; ++i) {
 	    			boolean spawnSuccessful = false;
-
+	    			
 	    			for(int attempt = 0; !spawnSuccessful && attempt < 4; ++attempt) {
 	    				float width = selectedCreature.type.width;
-	    				double var20 = Mth.clamp((double)x, (double)chunkCornerX + (double)width, (double)chunkCornerX + 16.0D - (double)width);
-	    				double var22 = Mth.clamp((double)z, (double)chunkCornerZ + (double)width, (double)chunkCornerZ + 16.0D - (double)width);
+	    				double realX = Mth.clamp((double)x, (double)chunkCornerX + (double)width, (double)chunkCornerX + 16.0D - (double)width);
+	    				double realZ = Mth.clamp((double)z, (double)chunkCornerZ + (double)width, (double)chunkCornerZ + 16.0D - (double)width);
 	                  
-	    				Creature entity = new Creature(selectedCreature.type, var20, 64, var22); // ignoring y-position for the moment
-	    				if (checkEntityCollision(entity, spawnedCreatures) || checkBlockCollision(entity)) {
+	    				int y = 64;
+	    				if (checkTerrain) {
+	    					// TODO
+	    					/*y = some value*/
+	    				}
+	    				Creature entity = new Creature(selectedCreature.type, realX, y, realZ);
+	    				if (checkEntityCollision(entity, currentPack) || (checkTerrain && checkBlockCollision(entity))) {	// entity collisions are considered by default
 	    					//System.out.println("Collision occurred.");
 	    					continue;
 	    				}
@@ -52,7 +61,7 @@ public class ChunkMobSpawner {
 	    				entity.pitch = 0.0F;
 	    				
 	    				// assuming there is no spawn obstruction and no additional spawn rules
-	    				spawnedCreatures.add(entity);
+	    				currentPack.add(entity);
 	    				spawnSuccessful = true;
 	            
 	    				// randomly changing the x,z coords of next spawn attempt, then checking if those coords lie within the chunk
@@ -71,6 +80,7 @@ public class ChunkMobSpawner {
 	    				*/
 	    			}
 	    		}
+	    		spawnedCreatures.addAll(currentPack);
 	    	}
 	    	return spawnedCreatures;
 	    } 
@@ -103,7 +113,8 @@ public class ChunkMobSpawner {
 	}
 	
 	private boolean checkBlockCollision(Creature target) {
-		// TODO (maybe??) use TerrainGenerator to detect some of the entity-block collisions
+		// TODO use TerrainGenerator to detect some of the entity-block collisions
+		
 		return false;
 	}
 }

@@ -12,8 +12,7 @@ public class Creature {
 		this.position = new Position(x,y,z);
 		this.yaw = yaw;
 		this.pitch = pitch;
-		this.hitbox = new Hitbox(new Position(this.position.x - this.type.width/2, this.position.y, this.position.z - this.type.width/2),
-				 				 new Position(this.position.x + this.type.width/2, this.position.y + this.type.height, this.position.z + this.type.width/2));
+		this.hitbox = Hitbox.of(type, position);
 	}
 	
 	public Creature(CreatureType type, Position pos, double yaw, double pitch) {
@@ -21,14 +20,16 @@ public class Creature {
 		this.position = pos;
 		this.yaw = yaw;
 		this.pitch = pitch;
-		this.hitbox = new Hitbox(new Position(this.position.x - this.type.width/2, this.position.y, this.position.z - this.type.width/2),
-				 new Position(this.position.x + this.type.width/2, this.position.y + this.type.height, this.position.z + this.type.width/2));
+		this.hitbox = Hitbox.of(type, position);
 	}
 	
 	public Creature(CreatureType type, double x, double y, double z) {
 		this.type = type;
 		this.position = new Position(x,y,z);
-		this.hitbox = new Hitbox(new Position(this.position.x - this.type.width/2, this.position.y, this.position.z - this.type.width/2),
-				 new Position(this.position.x + this.type.width/2, this.position.y + this.type.height, this.position.z + this.type.width/2));
+		this.hitbox = Hitbox.of(type, position);
+	}
+	
+	public String toString() {
+		return this.type.name() + ", " + this.position.toString();
 	}
 }

@@ -15,6 +15,7 @@ import com.seedfinding.mccore.block.Block;
 import com.seedfinding.mccore.block.Blocks;
 import com.seedfinding.mccore.rand.ChunkRand;
 import com.seedfinding.mccore.state.Dimension;
+import com.seedfinding.mccore.util.pos.CPos;
 import com.seedfinding.mccore.version.MCVersion;
 import com.seedfinding.mcmath.util.Mth;
 import com.seedfinding.mcreversal.ChunkRandomReverser;
@@ -32,9 +33,10 @@ public class Main {
 	public static final Dimension NETHER = Dimension.NETHER;
 	public static final Biome NETHERBIOME = Biomes.NETHER_WASTES;
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException{
 		//runLattiCG();
-		findWorldSeeds();
+		//findWorldSeeds();
+		test(12345L);
 	}
 	
 	public static void runLattiCG() {
@@ -57,7 +59,7 @@ public class Main {
 			rand.setSeed(populationSeed);
 			
 			ChunkMobSpawner spawner = new ChunkMobSpawner();
-			List<Creature> creatureList = spawner.getMobsInChunk(NETHERBIOME, 0, 0, rand); // using a dummy chunkpos here
+			List<Creature> creatureList = spawner.getMobsInChunk(NETHERBIOME, 0, 0, rand, null); // using a dummy chunkpos here
 			if (creatureList.size() >= 20) {
 				System.out.println(populationSeed);
 			}
@@ -100,6 +102,28 @@ public class Main {
 					
 					if (ok) System.out.println(structseed + " /execute in minecraft:the_nether run tp @s " + cx*16 + " 50 " + cz*16);
 				}
+			}
+		}
+	}
+	
+	public static void test(long worldseed) {
+		ChunkMobSpawner spawner = new ChunkMobSpawner();
+		ChunkRand rand = new ChunkRand();
+		
+		for (int chunkX = -10; chunkX <= 10; chunkX++) for (int chunkZ = -10; chunkZ <= 10; chunkZ++) {
+			rand.setPopulationSeed(worldseed, chunkX<<4, chunkZ<<4, MCVersion.v1_16_1);
+			
+			BiomeSource obs = BiomeSource.of(Dimension.OVERWORLD, VERSION, worldseed);
+			Biome b = obs.getBiomeForNoiseGen((chunkX << 2) + 2, 0, (chunkZ << 2) + 2);
+			//System.out.println(b.getName());
+			
+			List<Creature> creatureList = spawner.getMobsInChunk(b, chunkX, chunkZ, rand, null);
+			if (creatureList.isEmpty())
+				continue;
+			
+			System.out.println(worldseed + ": Likely creatures for chunk " + chunkX + "," + chunkZ + ": ");
+			for (Creature c : creatureList) {
+				System.out.println(c.toString());
 			}
 		}
 	}

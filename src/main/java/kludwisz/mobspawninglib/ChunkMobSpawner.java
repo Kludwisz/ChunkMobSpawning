@@ -18,29 +18,25 @@ public class ChunkMobSpawner {
 	
 	// note: the algorithm requires the rand object to be seeded with the population seed
 	public List<Creature> getMobsInChunk(Biome biome, int chunkX, int chunkZ, ChunkRand rand, TerrainGenerator tgen) {
-		boolean checkTerrain = tgen != null;
-		TerrainChunk tchunk = null;
-		if (checkTerrain)
-			tchunk = new TerrainChunk(new CPos(chunkX, chunkZ), tgen);
+		boolean skipTerrain = tgen == null;
+		TerrainChunk tchunk = skipTerrain ? null : new TerrainChunk(new CPos(chunkX, chunkZ), tgen);
 		
 		ArrayList<Creature> spawnedCreatures = new ArrayList<>();
-		ArrayList<Creature> currentPack = new ArrayList<>();
-	    List<CreatureData> creatureDataList = BiomeCreatures.getCreaturesForBiome(biome);
+	    List<CreatureSpawnData> CreatureSpawnDataList = BiomeCreatures.getCreaturesForBiome(biome);
 	    
-	    if (!creatureDataList.isEmpty()) {
+	    if (!CreatureSpawnDataList.isEmpty()) {
 	    	int chunkCornerX = chunkX << 4;
 	    	int chunkCornerZ = chunkZ << 4;
 
 	    	while(rand.nextFloat() < 0.1F) {
-	    		CreatureData selectedCreature = getRandomCreature(rand, creatureDataList);
+	    		CreatureSpawnData selectedCreature = getRandomCreature(rand, CreatureSpawnDataList);
 	    		int creatureCount = selectedCreature.minCount + rand.nextInt(1 + selectedCreature.maxCount - selectedCreature.minCount); 
-	    		System.out.println(creatureCount);
+	    		//System.out.println(creatureCount);
 	            
 	    		int x = chunkCornerX + rand.nextInt(16);
 	    		int z = chunkCornerZ + rand.nextInt(16);
 	    		final int originalBlockX = x;
 	    		final int originalBlockZ = z;
-	    		currentPack.clear();
 	    		
 	    		for(int i = 0; i < creatureCount; ++i) {
 	    			boolean spawnSuccessful = false;
@@ -49,20 +45,20 @@ public class ChunkMobSpawner {
 	    				float width = selectedCreature.type.width;
 	    				double realX = Mth.clamp((double)x, (double)chunkCornerX + (double)width, (double)chunkCornerX + 16.0D - (double)width);
 	    				double realZ = Mth.clamp((double)z, (double)chunkCornerZ + (double)width, (double)chunkCornerZ + 16.0D - (double)width);
-	    				int y = checkTerrain ? tchunk.getHeightAt((int)realX, (int)realZ) : 64;
+	    				int y = skipTerrain ? 64 : tchunk.getHeightAt((int)realX, (int)realZ);
 
 	    				Creature entity = new Creature(selectedCreature.type, realX, y, realZ);
-	    				if (checkEntityCollision(entity, currentPack) || (checkTerrain && tchunk.checkBlockCollision(entity))) {
-	    					System.out.println("Collision occurred.");
+	    				if ((!skipTerrain) && tchunk.checkBlockCollision(entity)) {
+	    					//System.out.println("Collision occurred.");
 	    					continue;
 	    				}
 	    				
-	    				entity.yaw = rand.nextFloat() * 360; // in mc source, the entity is created here
+	    				// in mc source, the entity is created here
+	    				entity.yaw = rand.nextFloat() * 360; 
 	    				entity.pitch = 0.0F;
 	    				
-	    				// assuming there is no spawn obstruction and no additional spawn rules
-	    				System.out.println("placed");
-	    				currentPack.add(entity);
+	    				// assuming there are no additional spawn requirements (like light level, type of block below, etc.)
+	    				spawnedCreatures.add(entity);
 	    				spawnSuccessful = true;
 	            
 	    				// randomly changing the x,z coords of next spawn attempt, then checking if those coords lie within the chunk
@@ -71,31 +67,22 @@ public class ChunkMobSpawner {
 	    				for(z += rand.nextInt(5) - rand.nextInt(5); x < chunkCornerX || x >= chunkCornerX + 16 || z < chunkCornerZ || z >= chunkCornerZ + 16; z = originalBlockZ + rand.nextInt(5) - rand.nextInt(5)) {
 	    					x = originalBlockX + rand.nextInt(5) - rand.nextInt(5);
 	    				}
-	    				
-	    				// the following do-while loop is an alternative which has the same properties as the code above
-	    				/*
-	    				do {
-	    					x = originalBlockX + rand.nextInt(5) - rand.nextInt(5);
-	    					z = originalBlockZ + rand.nextInt(5) - rand.nextInt(5);
-	    				} while (x < chunkCornerX || x >= chunkCornerX + 16 || z < chunkCornerZ || z >= chunkCornerZ + 16);
-	    				*/
 	    			}
 	    		}
-	    		spawnedCreatures.addAll(currentPack);
 	    	}
 	    	return spawnedCreatures;
 	    } 
 	    return List.of();
 	}
 	
-	public CreatureData getRandomCreature(ChunkRand rand, List<CreatureData> list) {
+	public CreatureSpawnData getRandomCreature(ChunkRand rand, List<CreatureSpawnData> list) {
 		int totalWeight = 0;
-		for (CreatureData creature : list) {
+		for (CreatureSpawnData creature : list) {
 			totalWeight += creature.weight;
 		}
 		
 		int m = rand.nextInt(totalWeight);
-		for (CreatureData creature : list) {
+		for (CreatureSpawnData creature : list) {
 			m -= creature.weight;
 			if (m<0) {
 				return creature;
@@ -103,13 +90,5 @@ public class ChunkMobSpawner {
 		}
 		
 		return null;
-	}
-	
-	public boolean checkEntityCollision(Creature target, List<Creature> entities) {
-		for (Creature other : entities) {
-			if (target.hitbox.collidesWithXZ(other.hitbox)) // using the shortcut without y axis for now
-				return true;
-		}
-		return false;
 	}
 }

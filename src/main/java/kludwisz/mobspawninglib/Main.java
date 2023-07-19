@@ -3,6 +3,7 @@ package kludwisz.mobspawninglib;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import com.seedfinding.latticg.reversal.DynamicProgram;
@@ -33,20 +34,24 @@ public class Main {
 	public static final Dimension NETHER = Dimension.NETHER;
 	public static final Biome NETHERBIOME = Biomes.NETHER_WASTES;
 	
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException {
 		//runLattiCG();
 		//findWorldSeeds();
 		test(12345L);
 	}
 	
-	// one solution: 177057131736104
+	/* solutions:
+	251888924553709
+	177057131736104
+	220297901824372
+	*/
 	public static void runLattiCG() {
 		DynamicProgram device = DynamicProgram.create(LCG.JAVA);
 		
 		// going for a pack of (potentially) 20 striders in 1 chunk
 		for (int i=0; i<10; i++) {
 			device.add(JavaCalls.nextFloat().lessThan(0.1F)); 	// does spawn
-			device.skip(1);										// useless nextInt(60)
+			device.skip(1);										// pointless nextInt(60)
 			device.skip(1);
 			//device.add(JavaCalls.nextInt(2).equalTo(1)); 		// ignoring pack size for optimization
 			device.skip(2+5+5); 								// 2 x nextInt(16) -> position 
@@ -82,7 +87,7 @@ public class Main {
 					BiomeSource nbs = BiomeSource.of(NETHER, VERSION, structseed);
 					TerrainGenerator ntg = TerrainGenerator.of(nbs);
 					
-					// checking for large, open lava area without any blocks in the way
+					// checking for large, open lava area without any blocks in the way (still not ideal, cause high caves mess everything up
 					boolean ok = true;
 					for (int x=cx<<4; x < (cx<<4)+16; x+=4) for (int z=cz<<4; z < (cz<<4)+16; z+=4) {
 						Block [] column = ntg.getColumnAt(x, z);
@@ -107,28 +112,49 @@ public class Main {
 		}
 	}
 	
-	public static void test(long worldseed) {
+	// useful for debugging
+	@SuppressWarnings("unused")
+	private static void test(long worldseed) {
 		ChunkMobSpawner spawner = new ChunkMobSpawner();
 		ChunkRand rand = new ChunkRand();
-		int chunkX = 134;
-		int chunkZ = -11;
-		//for (int chunkX = -16; chunkX <= 18; chunkX++) for (int chunkZ = -16; chunkZ <= 16; chunkZ++) {
+
+		System.out.println(worldseed);
+		for (int chunkX = -16; chunkX <= 16; chunkX++) for (int chunkZ = -16; chunkZ <= 16; chunkZ++) {
 			rand.setPopulationSeed(worldseed & Mth.MASK_48, chunkX<<4, chunkZ<<4, MCVersion.v1_16_1);
 			
 			BiomeSource obs = BiomeSource.of(Dimension.OVERWORLD, VERSION, worldseed);
 			Biome b = obs.getBiome((chunkX<<4)+8, 0, (chunkZ<<4)+8);
-			//System.out.println(b.getName());
-			
 			List<Creature> creatureList = spawner.getMobsInChunk(b, chunkX, chunkZ, rand, TerrainGenerator.of(obs));
 			
-			//if (creatureList.isEmpty())
-			//	continue;
+			if (creatureList.isEmpty())
+				continue;
 			
-			System.out.println(worldseed + ": Likely creatures at");
-			System.out.println(chunkX + "," + chunkZ + ", " + b.getName() + ":");
+			System.out.println("Likely creatures in " + b.getName() + ": ");
+			System.out.println("Chunk: " + chunkX + "," + chunkZ);
 			for (Creature c : creatureList) {
 				System.out.println(c.toString());
 			}
-		//}
+		}
+	}
+	
+	// according to this, around 0.04 of consecutive mob spawning attempts should feature an entity overlap
+	// in reality, this number should actually be higher (due to other mobs in the pack colliding as well)
+	@SuppressWarnings("unused")
+	private static float entityOverlapProbabilityTest() {
+		ChunkRand r = new ChunkRand();
+		r.setSeed(new Random().nextLong());
+		
+		int total=10000000, success=0;
+		int testX, testZ;
+		for (int i=0; i<total; i++) {
+			testX = r.nextInt(5) - r.nextInt(5);
+			testZ = r.nextInt(5) - r.nextInt(5);
+			if (testX == 0 && testZ == 0)
+				success++;
+		}
+		
+		float prob = (float)success / (float)total;
+		System.out.println(prob);
+		return prob;
 	}
 }

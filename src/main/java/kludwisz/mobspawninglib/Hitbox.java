@@ -15,21 +15,4 @@ public class Hitbox {
 			new Position(pos.x + type.width/2.0D, pos.y + type.height, pos.z + type.width/2.0D)
 			);
 	}
-	
-	public boolean collidesWithXZ(Hitbox other) {
-		if (   this.posMax.x >= other.posMin.x && this.posMin.x <= other.posMax.x 
-			&& this.posMax.z >= other.posMin.z && this.posMin.z <= other.posMax.z) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean collidesWithXYZ(Hitbox other) {
-		if (	this.posMax.x >= other.posMin.x && this.posMin.x <= other.posMax.x 
-			&&  this.posMax.y >= other.posMin.y && this.posMin.y <= other.posMax.y
-			&&  this.posMax.z >= other.posMin.z && this.posMin.z <= other.posMax.z) {
-			return true;
-		}	
-		return false;
-	}
 }

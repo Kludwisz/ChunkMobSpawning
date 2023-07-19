@@ -18,27 +18,20 @@ public class TerrainChunk {
 		BPos blockMin = target.hitbox.posMin.toBlockPos();
 		BPos blockMax = target.hitbox.posMax.toBlockPos();
 		
-		//System.out.print("{");
 		int standingAtY = blockMax.getY();
 		for (int x = blockMin.getX(); x <= blockMax.getX(); x++) {
 			for (int z = blockMin.getZ(); z <= blockMax.getZ(); z++) {
 				//System.out.println(this.getHeightAt(x, z));
 				if (this.getHeightAt(x, z) > standingAtY) {		// assuming that the terrain has no gaps along the Y axis
-					System.out.println("T");
 					return true;
 				}
 			}
 		}
-		//System.out.println("}");
 		
 		return false;
 	}
 	
 	public int getHeightAt(int x, int z) {
-		return this.heightmap[transform(x)][transform(z)];
-	}
-	
-	private int transform(int coordinate) {
-		return coordinate>=0 ? coordinate%16 : (coordinate - 16*coordinate) % 16;
+		return this.heightmap[x & 0xF][z & 0xF];
 	}
 }

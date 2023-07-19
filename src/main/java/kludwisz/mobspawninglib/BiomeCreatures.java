@@ -7,7 +7,7 @@ import java.util.List;
 import com.seedfinding.mcbiome.biome.Biome;
 
 public class BiomeCreatures {
-	public static List<CreatureData> getCreaturesForBiome(Biome biome) {
+	public static List<CreatureSpawnData> getCreaturesForBiome(Biome biome) {
 		Preset p = BIOME_CREATURES.getOrDefault(biome.getName(), null);
 		if (p != null)
 			return p.creatures;
@@ -73,85 +73,85 @@ public class BiomeCreatures {
 	
 	private static enum Preset {
 		STANDARD(List.of(
-				new CreatureData(CreatureType.SHEEP, 12, 4, 4),
-				new CreatureData(CreatureType.PIG, 10, 4, 4),
-				new CreatureData(CreatureType.CHICKEN, 10, 4, 4),
-				new CreatureData(CreatureType.COW, 8, 4, 4)
+				new CreatureSpawnData(CreatureType.SHEEP, 12, 4, 4),
+				new CreatureSpawnData(CreatureType.PIG, 10, 4, 4),
+				new CreatureSpawnData(CreatureType.CHICKEN, 10, 4, 4),
+				new CreatureSpawnData(CreatureType.COW, 8, 4, 4)
 				)),
 		FOREST(STANDARD, List.of(
-				new CreatureData(CreatureType.WOLF, 5, 4, 4)
+				new CreatureSpawnData(CreatureType.WOLF, 5, 4, 4)
 				)),
 		FLOWERFOREST(STANDARD, List.of(
-				new CreatureData(CreatureType.RABBIT, 4, 2, 3)
+				new CreatureSpawnData(CreatureType.RABBIT, 4, 2, 3)
 				)),
 		PLAINS(STANDARD, List.of(
-				new CreatureData(CreatureType.HORSE, 5, 2, 6),
-				new CreatureData(CreatureType.DONKEY, 1, 1, 3)
+				new CreatureSpawnData(CreatureType.HORSE, 5, 2, 6),
+				new CreatureSpawnData(CreatureType.DONKEY, 1, 1, 3)
 				)),
 		SAVANNA(STANDARD, List.of(
-				new CreatureData(CreatureType.HORSE, 1, 2, 6),
-				new CreatureData(CreatureType.DONKEY, 1, 1, 1)
+				new CreatureSpawnData(CreatureType.HORSE, 1, 2, 6),
+				new CreatureSpawnData(CreatureType.DONKEY, 1, 1, 1)
 				)),
 		SAVANNAPLATEAU(SAVANNA, List.of(
-				new CreatureData(CreatureType.LLAMA, 8, 4, 4)
+				new CreatureSpawnData(CreatureType.LLAMA, 8, 4, 4)
 				)),
 		MOUNTAINS(STANDARD, List.of(
-				new CreatureData(CreatureType.LLAMA, 5, 4, 6)
+				new CreatureSpawnData(CreatureType.LLAMA, 5, 4, 6)
 				)),
 		TAIGA(STANDARD, List.of(
-				new CreatureData(CreatureType.WOLF, 8, 4, 4),
-				new CreatureData(CreatureType.RABBIT, 4, 2, 3),
-				new CreatureData(CreatureType.FOX, 8, 2, 4)
+				new CreatureSpawnData(CreatureType.WOLF, 8, 4, 4),
+				new CreatureSpawnData(CreatureType.RABBIT, 4, 2, 3),
+				new CreatureSpawnData(CreatureType.FOX, 8, 2, 4)
 				)),
 		JUNGLE(STANDARD, List.of(
-				new CreatureData(CreatureType.PARROT, 40, 1, 2),
-				new CreatureData(CreatureType.PANDA, 1, 1, 2),
-				new CreatureData(CreatureType.CHICKEN, 10, 4, 4)
+				new CreatureSpawnData(CreatureType.PARROT, 40, 1, 2),
+				new CreatureSpawnData(CreatureType.PANDA, 1, 1, 2),
+				new CreatureSpawnData(CreatureType.CHICKEN, 10, 4, 4)
 				)),
 		JUNGLEEDGE(STANDARD, List.of(
-				new CreatureData(CreatureType.CHICKEN, 10, 4, 4)
+				new CreatureSpawnData(CreatureType.CHICKEN, 10, 4, 4)
 				)),
 		JUNGLEHILLS(STANDARD, List.of(
-				new CreatureData(CreatureType.PARROT, 10, 1, 1),
-				new CreatureData(CreatureType.PANDA, 1, 1, 2),
-				new CreatureData(CreatureType.CHICKEN, 10, 4, 4)
+				new CreatureSpawnData(CreatureType.PARROT, 10, 1, 1),
+				new CreatureSpawnData(CreatureType.PANDA, 1, 1, 2),
+				new CreatureSpawnData(CreatureType.CHICKEN, 10, 4, 4)
 				)),
 		JUNGLEMOD(STANDARD, List.of(
-				new CreatureData(CreatureType.PARROT, 10, 1, 1),
-				new CreatureData(CreatureType.CHICKEN, 10, 4, 4)
+				new CreatureSpawnData(CreatureType.PARROT, 10, 1, 1),
+				new CreatureSpawnData(CreatureType.CHICKEN, 10, 4, 4)
 				)),
 		BAMBOOJUNGLE(STANDARD, List.of(
-				new CreatureData(CreatureType.PARROT, 40, 1, 2),
-				new CreatureData(CreatureType.PANDA, 80, 1, 2),
-				new CreatureData(CreatureType.CHICKEN, 10, 4, 4)
+				new CreatureSpawnData(CreatureType.PARROT, 40, 1, 2),
+				new CreatureSpawnData(CreatureType.PANDA, 80, 1, 2),
+				new CreatureSpawnData(CreatureType.CHICKEN, 10, 4, 4)
 				)),
 		BAMBOOJUNGLEHILLS(STANDARD, List.of(
-				new CreatureData(CreatureType.PARROT, 10, 1, 1),
-				new CreatureData(CreatureType.PANDA, 80, 1, 2),
-				new CreatureData(CreatureType.CHICKEN, 10, 4, 4)
+				new CreatureSpawnData(CreatureType.PARROT, 10, 1, 1),
+				new CreatureSpawnData(CreatureType.PANDA, 80, 1, 2),
+				new CreatureSpawnData(CreatureType.CHICKEN, 10, 4, 4)
 				)),
 		FROZENBIOME(List.of(
-				new CreatureData(CreatureType.RABBIT, 10, 2, 3),
-				new CreatureData(CreatureType.POLAR_BEAR, 1, 1, 2)
+				new CreatureSpawnData(CreatureType.RABBIT, 10, 2, 3),
+				new CreatureSpawnData(CreatureType.POLAR_BEAR, 1, 1, 2)
 				)),
-		FROZENOCEAN( new CreatureData(CreatureType.POLAR_BEAR, 1, 1, 2) ),
-		DESERT( new CreatureData(CreatureType.RABBIT, 4, 2, 3) ),
-		BEACH( new CreatureData(CreatureType.TURTLE, 5, 2, 5) ),
-		MUSHROOM( new CreatureData(CreatureType.MOOSHROOM, 8, 4, 8) ),
-		NETHER( new CreatureData(CreatureType.STRIDER, 60, 1, 2) );
+		FROZENOCEAN( new CreatureSpawnData(CreatureType.POLAR_BEAR, 1, 1, 2) ),
+		DESERT( new CreatureSpawnData(CreatureType.RABBIT, 4, 2, 3) ),
+		BEACH( new CreatureSpawnData(CreatureType.TURTLE, 5, 2, 5) ),
+		MUSHROOM( new CreatureSpawnData(CreatureType.MOOSHROOM, 8, 4, 8) ),
+		NETHER( new CreatureSpawnData(CreatureType.STRIDER, 60, 1, 2) );
 		
 		
-		private List<CreatureData> creatures;
+		private List<CreatureSpawnData> creatures;
 		
-		Preset(CreatureData D){
+		Preset(CreatureSpawnData D){
 			this.creatures = List.of(D);
 		}
 		
-		Preset(List<CreatureData> L) {
+		Preset(List<CreatureSpawnData> L) {
 			this.creatures = L;
 		}
 		
-		Preset(Preset a, List<CreatureData> L) {
+		Preset(Preset a, List<CreatureSpawnData> L) {
 			this.creatures = new ArrayList<>(a.creatures);
 			this.creatures.addAll(L);
 		}

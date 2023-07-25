@@ -20,9 +20,8 @@ public class Main {
 	public static final Biome PLAINS = Biomes.PLAINS;
 	
 	public static void main(String[] args) throws IOException {
-		//debugFunction(12345L);
+		debugFunction(12345L);
 		//entityOverlapProbabilityTest();
-		Example2.run();
 	}
 
 	

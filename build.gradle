@@ -1,0 +1,66 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'maven-publish'
+}
+
+def ENV = System.getenv()
+
+archivesBaseName = 'Kludwisz'
+group = 'Kludwisz'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
+
+repositories {
+    mavenCentral()
+    //maven { url "https://maven.latticg.com" }
+    maven { url "https://maven.seedfinding.com" }
+    maven { url "https://www.jitpack.io" }
+}
+
+application {
+	mainClass = "BastionGenerator.properties.Main"
+}
+
+dependencies {
+    implementation('com.seedfinding:mc_math:1.171.0') 		{ transitive = false }
+    implementation('com.seedfinding:mc_seed:1.171.1') 		{ transitive = false }
+    implementation('com.seedfinding:mc_core:1.192.1') 		{ transitive = false }
+    implementation('com.seedfinding:mc_noise:1.171.1') 		{ transitive = false }
+    implementation('com.seedfinding:mc_reversal:1.171.1') 	{ transitive = false }
+	implementation('com.seedfinding:mc_biome:1.171.1') 		{ transitive = false }
+	implementation('com.seedfinding:mc_terrain:1.171.1') 	{ transitive = false }
+    implementation('com.seedfinding:mc_feature:1.171.5') 	{ transitive = false }
+}
+
+java {
+    withSourcesJar()
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = archivesBaseName
+            version = version
+            groupId = group
+
+            from components.java
+        }
+    }
+
+    // select the repositories you want to publish to
+    repositories {
+        if (ENV.MAVEN_URL) {
+            maven {
+                url ENV.MAVEN_URL
+                credentials {
+                    username ENV.MAVEN_USERNAME
+                    password ENV.MAVEN_PASSWORD
+                }
+            }
+        }
+    }
+}

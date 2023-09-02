@@ -15,7 +15,7 @@ targetCompatibility = JavaVersion.VERSION_16
 
 repositories {
     mavenCentral()
-    //maven { url "https://maven.latticg.com" }
+    maven { url "https://maven.latticg.com" }
     maven { url "https://maven.seedfinding.com" }
     maven { url "https://www.jitpack.io" }
 }

@@ -25,14 +25,15 @@ application {
 }
 
 dependencies {
-    implementation('com.seedfinding:mc_math:1.171.0') 		{ transitive = false }
-    implementation('com.seedfinding:mc_seed:1.171.1') 		{ transitive = false }
-    implementation('com.seedfinding:mc_core:1.192.1') 		{ transitive = false }
-    implementation('com.seedfinding:mc_noise:1.171.1') 		{ transitive = false }
-    implementation('com.seedfinding:mc_reversal:1.171.1') 	{ transitive = false }
-implementation('com.seedfinding:mc_biome:1.171.1') 		{ transitive = false }
-implementation('com.seedfinding:mc_terrain:1.171.1') 	{ transitive = false }
-    implementation('com.seedfinding:mc_feature:1.171.5') 	{ transitive = false }
+	implementation 'com.seedfinding:latticg:1.06@jar'
+    	implementation('com.seedfinding:mc_math:1.171.0') 		{ transitive = false }
+	implementation('com.seedfinding:mc_seed:1.171.1') 		{ transitive = false }
+	implementation('com.seedfinding:mc_core:1.192.1') 		{ transitive = false }
+	implementation('com.seedfinding:mc_noise:1.171.1') 		{ transitive = false }
+	implementation('com.seedfinding:mc_reversal:1.171.1') 	{ transitive = false }
+	implementation('com.seedfinding:mc_biome:1.171.1') 		{ transitive = false }
+	implementation('com.seedfinding:mc_terrain:1.171.1') 	{ transitive = false }
+	implementation('com.seedfinding:mc_feature:1.171.5') 	{ transitive = false }
 }
 
 // configure the maven publication

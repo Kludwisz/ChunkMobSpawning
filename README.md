@@ -1,5 +1,5 @@
 # TODO
-CLEAN UP THIS MESS
+Make a release
 
 # ChunkMobSpawning
 Simulate chunk generation passive mob spawning in Java.
